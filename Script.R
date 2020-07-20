@@ -1,8 +1,8 @@
 library(readr); library (dplyr)
 
-View("banco_de_dados/csv_sistemas.csv")
-
 df <- read.csv("banco_de_dados/csv_sistemas.csv", sep = ";")
+
+View(df)
 
 ##Perguntas
 
