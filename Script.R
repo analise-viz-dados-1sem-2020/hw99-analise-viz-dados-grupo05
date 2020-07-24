@@ -43,7 +43,7 @@ df %>%
   ggplot(aes(x=SEXO, y=n)) + 
   geom_col() + ggsave(filename = "grafico3.3.png")
 
-###Conclusão dos gráficos: Por sexo não há diferença. Mas há maior número de casos confirmados do sexo masculino?
+###Conclusão dos gráficos 3.1, 3.2 e 3.3: Por sexo não há diferença. Mas há maior número de casos confirmados do sexo masculino.
   
 
 #4. Municípios no Norte e Nordeste possuem piores evoluções dos quadros clínicos em comparação com Belo Horizonte e suas regionais?
