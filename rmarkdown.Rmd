@@ -1,0 +1,157 @@
+---
+title: "Análise Covid-19"
+author: "Grupo 05"
+date: "30/07/2020"
+output: html_document
+---
+<h2>Introdução
+
+<br/> 
+
+<div align="justify"> <font size="5" face="Times">Este relatório tem o objetivo de analisar os dados da Covid-19 em Minas Gerais. Os dados foram extraídos no dia 13/07/2020 do <a href="http://coronavirus.saude.mg.gov.br/painel">site</a> da Secretaria de Saúde do estado. O escopo da análise foi comparar a contaminação e evolução do novo coronavírus segundo a faixa-etária, gênero e região do estado. Quanto à região, optou-se por comparar as macro regiões do norte de Minas com a região metropolitana. </div>
+
+<h2>1. Qual o perfil da curva de crescimento (número de casos acumulados)na população acima dos 60 anos?
+<br/> 
+```{r}
+
+```
+
+
+<h2>2. Existe alguma associação entre comorbidades e a evolução do quadro clínico?
+<br/> 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+  
+<h2>3. Existe alguma diferenciação entre os sexos no que se relaciona à evolução do quadro clínico?
+<br/> 
+```{r echo=FALSE, warning=FALSE, pregunta_3_3, message=FALSE}
+library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
+
+
+library(ggThemeAssist)
+library(scales)
+df <- read_delim("banco_de_dados/csv_sistemas.csv",
+";", escape_double = FALSE, col_types = cols(DATA_NOTIFICACAO = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
+
+df %>%
+  select(SEXO,EVOLUCAO,DATA_NOTIFICACAO) %>%
+  filter(SEXO %in% c('FEMININO', 'MASCULINO')) %>%
+  mutate(SEXO=factor(SEXO)) %>%
+  count(DATA_NOTIFICACAO,EVOLUCAO,SEXO) %>%
+  group_by(EVOLUCAO,SEXO) %>%
+  mutate(n_acumulado=cumsum(n)) %>%
+  rename(confirmados=n_acumulado) %>%
+  ggplot(aes(x=DATA_NOTIFICACAO, y=confirmados, color=SEXO)) + 
+  geom_line() + facet_wrap(~EVOLUCAO, scales = "free_y") +  labs(title = "Acumulado de Casos Confirmados por Gênero",
+                                                                subtitle = "Segundo a evolução",
+                                                                x = "Gênero",
+                                                                y = "Casos Confirmados", color="Gênero")
+
+
+```
+<br/> 
+
+<div align="justify"><font size="5" face="Times">No gráfico acima, são demonstrados quadro associações: "Em acompanhamento", "Não Informado", "Óbitos" e "Recuperados". Em todos os casos, o perfil das curvas se assemelham apontando para o crescimento dos números de casos entre janeiro até junho/julho. A consideração a ser feita em resposta ao proposto é que a relação existente entre gênero e o tipo de evolução do quadro clínico é estreita tratando-se da variável “Óbito”. Já em relação as outras variáveis não há uma associação clara.</div>
+
+<br/> 
+<div align="justify"><font size="5" face="Times">Em releção ao número de ocorrência de diagnósticos positivados para COVID-19, o gráfico corrobora com o proposto pela literatura que vem demonstrando uma porcentagem maior de homens com diagnósticos positivados, o que ainda não é esclarecido pelos estudiosos. Assim, a curva para o gênero masculino sobrepõe-se a curva rosa para o gênero feminino. No gráfico abaixo, observa-se em todos os quadros de evolução o número de afetados do gênero masculino é superior ao feminino.</div>
+<br/> 
+
+```{r echo=FALSE, warning=FALSE, pregunta_3_1, message=FALSE}
+library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
+
+
+library(ggThemeAssist)
+library(scales)
+df <- read_delim("banco_de_dados/csv_sistemas.csv",
+";", escape_double = FALSE, col_types = cols(DATA_NOTIFICACAO = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
+
+df %>%
+  select(SEXO,EVOLUCAO,CLASSIFICACAO_CASO) %>%
+  filter(SEXO %in% c('FEMININO', 'MASCULINO')) %>% 
+  count(EVOLUCAO,SEXO) %>%
+  ggplot(aes(x=SEXO, y=n)) + 
+  geom_col() + facet_wrap(~EVOLUCAO, scales = "free_y") + labs(title = "Números de Casos Confirmados por Gênero",
+                                                               subtitle = "Segundo a evolução",
+                                                               x = "Gênero",
+                                                               y = "Casos Confirmados")
+```
+
+<br/> 
+ <div align="justify"><font size="5" face="Times">Tratando-se da relação entre os casos que evoluíram para óbito, é possível perceber uma ligeira diferenciação entre homens e mulheres. Esses dados são compatíveis com os divulgados recentemente pelo Ministério da Saúde em que aproximadamente 58% dos casos de óbitos são homens. A mesma tendência pode ser observada em outros países como China e Itália. Na medida em que novos estudos clínicos são feitos, as causas para esse demonstrativo apontam para a multifatoriedade dessa relação, que envolve fatores culturais e sociais e a presença de doenças prévias, exemplificado no estilo de vida, nos comportamentos e nos poucos acompanhamentos médicos.</div>
+<br/> 
+<div align="justify"><font size="5" face="Times">Já em relação às variáveis “Recuperado”, “Não Informado” e “Em acompanhamento” segundo a evolução não há uma relação clara definida observada no gráfico. </div>
+
+
+<h2>4. Existe alguma diferenciação entre as faixas-etárias no que se relaciona à evolução do quadro clínico?
+
+<br/> 
+```{r echo=FALSE, warning=FALSE, pregunta_3_2, message=FALSE}
+library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
+
+
+library(ggThemeAssist)
+library(scales)
+df <- read_delim("banco_de_dados/csv_sistemas.csv",
+";", escape_double = FALSE, col_types = cols(DATA_NOTIFICACAO = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
+
+
+df %>%
+  select(FAIXA_ETARIA,EVOLUCAO,CLASSIFICACAO_CASO) %>%
+  count(EVOLUCAO,FAIXA_ETARIA) %>%
+  ggplot(aes(x=FAIXA_ETARIA, y=n)) + 
+  geom_col() + facet_wrap(~EVOLUCAO, scales = "free_y") +   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +  labs(title = "Total Casos Confirmados por Faixa etária", subtitle = "Segundo a evolução", x="Faixa Etária",                                                                                                                           x= "Gênero",                                                                x = "Gênero",
+                                                                                                                             y = "Casos Confirmados")
+```
+<br/> 
+
+<div align="justify"> <font size="5" face="Times"> Sabe-se que a evolução da Covid-19 tende a piorar quanto maior a  faixa etária, devido, principalmente, as comorbidades associadas e a fragilidade da saúde que dificulta a recuperação clínica. Assim como apontado no gráfico acima, é possível observar que a maior ocorrência de óbitos tende ocorrer na faixa dos 60-89 anos.</div>
+<br/> 
+ <h2>5. Municípios no Norte e Nordeste possuem piores evoluções dos quadros clínicos em comparação com Belo Horizonte e suas regionais?
+ <br/> 
+
+```{r echo=FALSE, warning=FALSE, pregunta_4, message=FALSE}
+library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
+
+
+library(ggThemeAssist)
+library(scales)
+df <- read_delim("banco_de_dados/csv_sistemas.csv",
+";", escape_double = FALSE, col_types = cols(DATA_NOTIFICACAO = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
+
+df %>%
+  filter(MACRO %in% c('CENTRO', 'JEQUITINHONHA', 'NORDESTE','NOROESTE','NORTE')) %>%
+  count(DATA_NOTIFICACAO,MACRO,EVOLUCAO) %>%
+  group_by(MACRO,EVOLUCAO) %>% 
+  mutate(n_acumulado=cumsum(n)) %>%
+  rename(confirmados=n_acumulado) %>%
+  drop_na(DATA_NOTIFICACAO) %>%
+  ggplot(aes(x=DATA_NOTIFICACAO, y=confirmados, color=EVOLUCAO)) + 
+  geom_line() + facet_wrap(~MACRO, scales = "free_y") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title = "Acumulado de Casos Confirmados por Região",
+                                                                                                                                 subtitle = "Segundo a evolução",
+
+                                                                                                                                                                                                                                                         x = "Data de notificação",
+                                                                                                                                 y = "Casos Confirmados", fill="Região") 
+
+```
+
+<br/> 
+<div align="justify"> <font size="5" face="Times">No intuito de auxiliar e ampliar as considerações, as regionais foram agrupadas em: Centro, Jequitinhonha, Nordeste, Noroeste e Norte.
+Inicialmente, cabe levar em consideração que os padrões gerados no que se refere a relação entre Casos Confirmados acumulados por Região, os resultados são peculiares. Entretanto, existe uma semelhança entre o padrão de inclinação entre o Centro e Norte, principalmente nas evoluções descritas como “Em acompanhamento” e “recuperado”.</div>
+<br/> 
+<div align="justify"> <font size="5" face="Times">A pergunta inicial que se considerava era: a interiorização do Covid-19 para regiões mais pobres de Minas Gerais, onde a oferta de leitos é menor, teria piores evoluções dos quadros clínicos comparado a Belo Horizonte e suas regionais? Entretanto, essa correlação não é respondida pelo gráfico, que aponta para uma mesma tendência de crescimento da curva de óbitos, tanto para a região Centro, como Norte, Nordeste e Noroeste. Nesse sentido, conclui-se que para responder ao proposto, a relação somente entre casos positivados sendo a evolução, seria insuficiente.</div>
+<br/> 
+<div align="justify"> <font size="5" face="Times">Importante considerar que a ausência de registro vem crescendo nos últimos meses (tendência no crescimento da linha verde). A falta de registro pode deixar as análises vulneráveis e, portanto, qualquer afirmação ou consideração torna-se delicada. Esse seria um limite considerável para essa análise.</div>
+<br/> 
+<h2>Conclusão
+<br/> 
+ <div align="justify"> <font size="5" face="Times">Inserir conclusão. obs: falar do numeroso caso de registros incometatos (NA)</div>
+ <br/> 
+ <h2> Referências
+ <br/> 
+<div align="justify"> <font size="5" face="Times">Orgaz, C. J. Coronavírus: por que há mais homens que mulheres infectados. BBC News Brasil. Disponível em:
+https://www.bbc.com/portuguese/internacional-51674894. Acesso em 25 de julho de 2020. </div>
