@@ -62,10 +62,67 @@ agregar %>%
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
 
+library(tidyverse)
 
+espeschit_df <- read_delim("banco_de_dados/csv_sistemas.csv",
+                 ";", escape_double = FALSE, col_types = cols(DATA_NOTIFICACAO = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
+
+espeschit_df2 <- espeschit_df %>%
+  group_by(COMORBIDADE) %>%
+  count(EVOLUCAO) %>%
+  filter(COMORBIDADE %in% c("NAO", "SIM")) %>% 
+  filter(EVOLUCAO %in% c("OBITO", "RECUPERADO", "EM ACOMPANHAMENTO")) %>% 
+  mutate(total = sum(n)) %>% 
+  mutate(relativo = (n/total))
   
+espeschit_df2 %>% 
+  ggplot(mapping = aes(x = EVOLUCAO, y = relativo)) +
+  geom_col()+
+  facet_wrap(~COMORBIDADE)+
+  labs(x = "Evolução", y = "Porcentagem", title = "Evolução dos casos por existência de comorbidade")
+
+espeschit_df3 <- espeschit_df %>% 
+  group_by(COMORBIDADE) %>% 
+  count(INTERNACAO) %>% 
+  filter(COMORBIDADE %in% c("NAO", "SIM")) %>% 
+  filter(INTERNACAO %in% c("NAO", "SIM")) %>% 
+  mutate(total = sum(n)) %>% 
+  mutate(relativo = (n/total))
+
+espeschit_df3 %>% 
+  ggplot(mapping = aes(x = INTERNACAO, y = relativo))+
+  geom_col()+
+  facet_wrap(~COMORBIDADE)+
+  labs(x = "Houve internação", y = "Porcentagem", title = "Necessidade de internação por existência de comorbidade")
+
+espeschit_df4 <- espeschit_df %>% 
+  group_by(COMORBIDADE) %>% 
+  count(UTI) %>% 
+  filter(COMORBIDADE %in% c("NAO", "SIM")) %>% 
+  filter(UTI %in% c("NAO", "SIM")) %>% 
+  mutate(total = sum(n)) %>% 
+  mutate(relativo = (n/total))
+
+espeschit_df4 %>% 
+  ggplot(mapping = aes(x = UTI, y = relativo))+
+  geom_col()+
+  facet_wrap(~COMORBIDADE)+
+  labs(x = "Houve internação em UTI", y = "Porcentagem", title = "Necessidade de internação em UTI por existência de 
+                              comorbidade")
+```
+<br>
+<div align="justify"><font size="5" face="Times"> Para responder à pergunta proposta foram elaborados três gráficos, que abordam a evolução dos casos, aqueles nos quais foi necessária a internação e aqueles nos quais foi necessária a internação em Unidades de Tratamento Intensivo (UTI), todos considerando o recorte de se o paciente havia alguma comorbidade prévia. Para fins dessa análise foram excluídos os casos em que não há informação sobre comorbidade ou sobre a evolução clínica do caso, uma vez que considerá-los não agregaria informação à analíse proposta. Abaixo têm-se os gráficos e uma breve explicação acerca de seu comportamento.
+
+![](grafico2.1.png)
+<div align="justify"><font size="5" face="Times"> No gráfico acima fica evidente que os casos em que há recuperação do indivíduo são mais expressivos entre os que não possuem comorbidade, enquanto há maior incidência de óbito entre os indivíduos que possuem. A porcentagem foi calculada com relação ao recorte de existência de comorbidade, de forma a possibilitar uma análise comparada entre os grupos, que possuem dimensão absoluta distintas. Conclui-se a partir dessa base de dados, portanto, que a existência de comorbidade é fator que influencia a possibilidade de evolução da Covid-19 para o óbito.
+
+![](grafico2.2.png)
+<div align="justify"><font size="5" face="Times"> No gráfico acima é possível perceber que a necessidade de internação é mais expressiva entre os indivíduos que possuem comorbidade. Dessa forma, é possível inferir, com base nessa base de dados, que os indíviduos com comorbidade possuem maior probabilidade de agravamento da doença, de forma que necessitem de acompanhamento médico mais qualificado.
+
+![](grafico2.3.png)
+<div align="justify"><font size="5" face="Times"> O gráfico acima corrobora com as inferências anteriormente feitas, uma vez que o grupo de indivíduos que possui comorbidade tiveram porcentagem mais expressiva de necessidade de internação em UTI. Dessa forma, conclui-se que a existência de comorbiade é um fator que permite inferir acerca da evolução da Covid-19
+
 <h2>3. Existe alguma diferenciação entre os sexos no que se relaciona à evolução do quadro clínico?
 <br/> 
 ```{r echo=FALSE, warning=FALSE, pregunta_3_3, message=FALSE}
