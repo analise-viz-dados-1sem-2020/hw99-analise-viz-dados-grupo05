@@ -8,9 +8,12 @@ output: html_document
 
 <br/> 
 
-<div align="justify"> <font size="5" face="Times">Este relatório tem o objetivo de analisar os dados da Covid-19 em Minas Gerais. Os dados foram extraídos no dia 13/07/2020 do <a href="http://coronavirus.saude.mg.gov.br/painel">site</a> da Secretaria de Saúde do estado. O escopo da análise foi comparar a contaminação e evolução do novo coronavírus segundo a faixa-etária, gênero e região do estado. Quanto à região, optou-se por comparar as macro regiões do norte de Minas com a região metropolitana. </div>
+<div align="justify"> <font size="5" face="Times">Este relatório tem o objetivo de analisar os dados da Covid-19 em Minas Gerais. Os dados foram extraídos no dia 13/07/2020 do <a href="http://coronavirus.saude.mg.gov.br/painel">site</a> da Secretaria de Saúde do estado. O escopo da análise foi comparar a contaminação e evolução do novo coronavírus segundo a faixa-etária, comorbidade, gênero e região do estado. Quanto à região, optou-se por comparar as macro regiões do norte de Minas com a região metropolitana. </div>
 
-<h2>1. Qual o perfil da curva de crescimento (número de casos acumulados)na população com com idade a partir de 60 anos?
+<br/>
+
+<h2>1. Qual o perfil da curva de crescimento (número de casos acumulados) na população com com idade a partir de 60 anos?
+
 <br/> 
 ```{r echo=FALSE, warning=FALSE, pregunta_1, message=FALSE}
 library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
@@ -52,7 +55,9 @@ agregar %>%
   labs(title= "Acumulado de casos confirmados para maiores de 60 anos",x= "Data", y = "Total acumulado de casos")
 
 ```
+
 <br>
+
 <div align="justify"><font size="5" face="Times"> É possível ver no gráfico do acumulado de casos de Covid-19 em Minas Gerais na população com idade acima de 60 anos que a curva começa a crescer lentamente no fim de maio e vai ficando cada vez mais inclinada com o passar das semanas, similar a uma curva exponencial. No entanto, essa expansão não segue extamente um modelo exponencial. Podemos ver que a partir de meados de junho a curva deixa de se parecer com uma curva exponencial. Isso acontece porque as epidemias acabam com o esgotamento dos suscetíveis ou, como se diz, com a imunidade do rebanho. O número de novos casos aumenta rapidamente, atinge um pico e depois diminui. Isso faz com que a curva de casos acumulados cresça lentamente no início, rapidamente durante a fase crítica da epidemia e, depois, volta a crescer lentamente com a diminuição dos novos casos. Podemos ver que, no caso de Minas Gerais e para essa faixa etária, a curva tem apresentado uma inclinação cada vez menor nos últimos dias, o que significa que o número diário de novos casos confirmados tem diminuido.</div>
 <br/> 
 
@@ -111,25 +116,44 @@ espeschit_df4 %>%
   labs(x = "Houve internação em UTI", y = "Porcentagem", title = "Necessidade de internação em UTI por existência de 
                               comorbidade")
 ```
+
 <br>
+
 <div align="justify"><font size="5" face="Times"> Para responder à pergunta proposta foram elaborados três gráficos, que abordam a evolução dos casos, aqueles nos quais foi necessária a internação e aqueles nos quais foi necessária a internação em Unidades de Tratamento Intensivo (UTI), todos considerando o recorte de se o paciente havia alguma comorbidade prévia. Para fins dessa análise foram excluídos os casos em que não há informação sobre comorbidade ou sobre a evolução clínica do caso, uma vez que considerá-los não agregaria informação à analíse proposta. Abaixo têm-se os gráficos e uma breve explicação acerca de seu comportamento.
 
+<br/>
+
 ![](grafico2.1.png)
+
+<br/>
+
 <div align="justify"><font size="5" face="Times"> No gráfico acima fica evidente que os casos em que há recuperação do indivíduo são mais expressivos entre os que não possuem comorbidade, enquanto há maior incidência de óbito entre os indivíduos que possuem. A porcentagem foi calculada com relação ao recorte de existência de comorbidade, de forma a possibilitar uma análise comparada entre os grupos, que possuem dimensão absoluta distintas. Conclui-se a partir dessa base de dados, portanto, que a existência de comorbidade é fator que influencia a possibilidade de evolução da Covid-19 para o óbito.
 
+<br/>
+
 ![](grafico2.2.png)
+
+<br/>
+
 <div align="justify"><font size="5" face="Times"> No gráfico acima é possível perceber que a necessidade de internação é mais expressiva entre os indivíduos que possuem comorbidade. Dessa forma, é possível inferir, com base nessa base de dados, que os indíviduos com comorbidade possuem maior probabilidade de agravamento da doença, de forma que necessitem de acompanhamento médico mais qualificado.
 
+<br/>
+
 ![](grafico2.3.png)
-<div align="justify"><font size="5" face="Times"> O gráfico acima corrobora com as inferências anteriormente feitas, uma vez que o grupo de indivíduos que possui comorbidade tiveram porcentagem mais expressiva de necessidade de internação em UTI. Dessa forma, conclui-se que a existência de comorbiade é um fator que permite inferir acerca da evolução da Covid-19
+
+<br/>
+
+<div align="justify"><font size="5" face="Times"> O gráfico acima corrobora com as inferências anteriormente feitas, uma vez que o grupo de indivíduos que possui comorbidade tiveram porcentagem mais expressiva de necessidade de internação em UTI. Dessa forma, conclui-se que a existência de comorbiade é um fator que permite inferir acerca da evolução da Covid-19.
+
+<br/>
 
 <h2>3. Existe alguma diferenciação entre os sexos no que se relaciona à evolução do quadro clínico?
+
 <br/> 
+
 ```{r echo=FALSE, warning=FALSE, pregunta_3_3, message=FALSE}
 library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
 
-
-library(ggThemeAssist)
 library(scales)
 df <- read_delim("banco_de_dados/csv_sistemas.csv",
 ";", escape_double = FALSE, col_types = cols(DATA_NOTIFICACAO = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
@@ -150,6 +174,7 @@ df %>%
 
 
 ```
+
 <br/> 
 
 <div align="justify"><font size="5" face="Times">No gráfico acima, são demonstrados quadro associações: "Em acompanhamento", "Não Informado", "Óbitos" e "Recuperados". Em todos os casos, o perfil das curvas se assemelham apontando para o crescimento dos números de casos entre janeiro até junho/julho. A consideração a ser feita em resposta ao proposto é que a relação existente entre gênero e o tipo de evolução do quadro clínico é estreita tratando-se da variável “Óbito”. Já em relação as outras variáveis não há uma associação clara.</div>
@@ -158,11 +183,14 @@ df %>%
 <div align="justify"><font size="5" face="Times">Em releção ao número de ocorrência de diagnósticos positivados para COVID-19, o gráfico corrobora com o proposto pela literatura que vem demonstrando uma porcentagem maior de homens com diagnósticos positivados, o que ainda não é esclarecido pelos estudiosos. Assim, a curva para o gênero masculino sobrepõe-se a curva rosa para o gênero feminino. No gráfico abaixo, observa-se em todos os quadros de evolução o número de afetados do gênero masculino é superior ao feminino.</div>
 <br/> 
 
+<div align="justify"><font size="5" face="Times">Outo ponto a destacar é o expressivo número de casos em que não há informação sobre a evolução dos casos. Isso prejudica a análise da questão levantada.</div>
+
+<br/> 
+
 ```{r echo=FALSE, warning=FALSE, pregunta_3_1, message=FALSE}
 library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
 
 
-library(ggThemeAssist)
 library(scales)
 df <- read_delim("banco_de_dados/csv_sistemas.csv",
 ";", escape_double = FALSE, col_types = cols(DATA_NOTIFICACAO = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
@@ -178,15 +206,17 @@ df %>%
                                                                y = "Casos Confirmados")
 ```
 
-<br/> 
+<br/>
+
  <div align="justify"><font size="5" face="Times">Tratando-se da relação entre os casos que evoluíram para óbito, é possível perceber uma ligeira diferenciação entre homens e mulheres. Esses dados são compatíveis com os divulgados recentemente pelo Ministério da Saúde em que aproximadamente 58% dos casos de óbitos são homens. A mesma tendência pode ser observada em outros países como China e Itália. Na medida em que novos estudos clínicos são feitos, as causas para esse demonstrativo apontam para a multifatoriedade dessa relação, que envolve fatores culturais e sociais e a presença de doenças prévias, exemplificado no estilo de vida, nos comportamentos e nos poucos acompanhamentos médicos.</div>
 <br/> 
-<div align="justify"><font size="5" face="Times">Já em relação às variáveis “Recuperado”, “Não Informado” e “Em acompanhamento” segundo a evolução não há uma relação clara definida observada no gráfico. </div>
+<div align="justify"><font size="5" face="Times">Já em relação às variáveis “Recuperado”, “Não Informado” e “Em acompanhamento” segundo a evolução não há uma relação clara definida observada no gráfico. Mais uma vez, o elevado número de casos não informado prejudica a análise dessa questão.</div>
 
 
 <h2>4. Existe alguma diferenciação entre as faixas-etárias no que se relaciona à evolução do quadro clínico?
 
 <br/> 
+
 ```{r echo=FALSE, warning=FALSE, pregunta_3_2, message=FALSE}
 library(readr); library (dplyr); library(ggplot2); library(tidyverse); library(utils)
 
@@ -204,11 +234,15 @@ df %>%
   geom_col() + facet_wrap(~EVOLUCAO, scales = "free_y") +   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +  labs(title = "Total Casos Confirmados por Faixa etária", subtitle = "Segundo a evolução", x="Faixa Etária",                                                                                                                           x= "Gênero",                                                                x = "Gênero",
                                                                                                                              y = "Casos Confirmados")
 ```
+
 <br/> 
 
-<div align="justify"> <font size="5" face="Times"> Sabe-se que a evolução da Covid-19 tende a piorar quanto maior a  faixa etária, devido, principalmente, as comorbidades associadas e a fragilidade da saúde que dificulta a recuperação clínica. Assim como apontado no gráfico acima, é possível observar que a maior ocorrência de óbitos tende ocorrer na faixa dos 60-89 anos.</div>
+<div align="justify"> <font size="5" face="Times"> Sabe-se que a evolução da Covid-19 tende a piorar quanto maior a  faixa etária, devido, principalmente, as comorbidades associadas e a fragilidade da saúde que dificulta a recuperação clínica. Assim como apontado no gráfico acima, é possível observar que a maior ocorrência de óbitos tende ocorrer na faixa dos 60-89 anos. Observa-se ainda o elevado número de casos em que não há informação sobre a faixa etária do paciente em acompanhamento e da evolução.</div>
+
 <br/> 
+
  <h2>5. Municípios no Norte e Nordeste possuem piores evoluções dos quadros clínicos em comparação com Belo Horizonte e suas regionais?
+ 
  <br/> 
 
 ```{r echo=FALSE, warning=FALSE, pregunta_4, message=FALSE}
@@ -237,19 +271,30 @@ df %>%
 ```
 
 <br/> 
+
 <div align="justify"> <font size="5" face="Times">No intuito de auxiliar e ampliar as considerações, as regionais foram agrupadas em: Centro, Jequitinhonha, Nordeste, Noroeste e Norte.
-Inicialmente, cabe levar em consideração que os padrões gerados no que se refere a relação entre Casos Confirmados acumulados por Região, os resultados são peculiares. Entretanto, existe uma semelhança entre o padrão de inclinação entre o Centro e Norte, principalmente nas evoluções descritas como “Em acompanhamento” e “recuperado”.</div>
+Inicialmente, cabe levar em consideração que os padrões gerados no que se refere a relação entre Casos Confirmados acumulados por Região, os resultados são peculiares. Entretanto, existe uma semelhança entre o padrão de inclinação entre o Centro e Norte, principalmente nas evoluções descritas como “Em acompanhamento” e Recuperado”.</div>
 <br/> 
 <div align="justify"> <font size="5" face="Times">A pergunta inicial que se considerava era: a interiorização do Covid-19 para regiões mais pobres de Minas Gerais, onde a oferta de leitos é menor, teria piores evoluções dos quadros clínicos comparado a Belo Horizonte e suas regionais? Entretanto, essa correlação não é respondida pelo gráfico, que aponta para uma mesma tendência de crescimento da curva de óbitos, tanto para a região Centro, como Norte, Nordeste e Noroeste. Nesse sentido, conclui-se que para responder ao proposto, a relação somente entre casos positivados sendo a evolução, seria insuficiente.</div>
 <br/> 
 <div align="justify"> <font size="5" face="Times">Importante considerar que a ausência de registro vem crescendo nos últimos meses (tendência no crescimento da linha verde). A falta de registro pode deixar as análises vulneráveis e, portanto, qualquer afirmação ou consideração torna-se delicada. Esse seria um limite considerável para essa análise.</div>
+
 <br/> 
+
 <h2>Conclusão
+
 <br/> 
- <div align="justify"> <font size="5" face="Times">Inserir conclusão. obs: falar do numeroso caso de registros incometatos (NA)</div>
+
+ <div align="justify"> <font size="5" face="Times">Diante dos dados apresentados, conclui-se que entre as categorias escolhidos (faixa-etária, comorbidade, idade, gênero e região), percebe-se que a faixa-etária e a comorbidade são critérios importantes para a evolução da doença.  De fato, pessoas acima de 60 anos e pessoas com comorbidade têm maior probabilidade de serem internadas em UTI e de se tornarem vítimas fatais da Covid-19.</div>
  <br/> 
+ <div align="justify"> <font size="5" face="Times">Em relaçao aos outros critérios escolhidos (gênero e região), entende-se que análise ficou prejudicada pelo elevado número de ausência de informação. Isso revela a necessidade de melhoria no processo de coleta dos dados pela Secretaria de Saúde. </div>
+ 
+ <br/> 
+ 
  <h2> Referências
+ 
  <br/> 
+ 
 <div align="justify"> <font size="5" face="Times">Orgaz, C. J. Coronavírus: por que há mais homens que mulheres infectados. BBC News Brasil. Disponível em:
 https://www.bbc.com/portuguese/internacional-51674894. Acesso em 25 de julho de 2020. </div>
 
